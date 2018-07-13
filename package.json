@@ -22,5 +22,9 @@
     "eslint-plugin-import": "^2.13.0",
     "mocha": "^5.2.0",
     "should": "^13.2.1"
+  },
+  "dependencies": {
+    "async": "^2.6.1",
+    "deasync": "^0.1.13"
   }
 }
