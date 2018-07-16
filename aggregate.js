@@ -15,7 +15,9 @@ const aggregate = function process(filePath) {
     readfile(filePath).then((resolved) => {
       let rows = []; // declare array to split data in lines
       rows = (resolved.replace(/["]+/g, '')).split('\n');
-      const header = rows[0].split(',');
+      const countryIndex = (rows[0].split(',')).indexOf('Country Name');
+      const populationIndex = (rows[0].split(',')).indexOf('Population (Millions) - 2012');
+      const gdpcountryIndex = (rows[0].split(',')).indexOf('GDP Billions (US Dollar) - 2012');
       const result = {}; // declare an object to store final result
       let continent;
       let population;
@@ -23,20 +25,20 @@ const aggregate = function process(filePath) {
       rows.forEach((item, index) => {
         if (item.length > 1 && index > 0) {
           const datarow = item.split(','); // convert csv to 2d array
-          const country = datarow[header.indexOf('Country Name')];
+          const country = datarow[countryIndex];
           continent = continents[country];
           // check if continent already exists in result set
           if (continent) {
             if (result[continent] === undefined) {
               // if continent doesnot exist, add the object with required data
-              population = parseFloat(datarow[header.indexOf('Population (Millions) - 2012')]);
-              gdpcountry = parseFloat(datarow[header.indexOf('GDP Billions (US Dollar) - 2012')]);
+              population = parseFloat(datarow[populationIndex]);
+              gdpcountry = parseFloat(datarow[gdpcountryIndex]);
               result[continent] = {};
               result[continent].GDP_2012 = gdpcountry;
               result[continent].POPULATION_2012 = population;
             } else { // if continent exist, update the values for GDP and population
-              population = parseFloat(datarow[header.indexOf('Population (Millions) - 2012')]) + result[continent].POPULATION_2012;
-              gdpcountry = parseFloat(datarow[header.indexOf('GDP Billions (US Dollar) - 2012')]) + result[continent].GDP_2012;
+              population = parseFloat(datarow[populationIndex]) + result[continent].POPULATION_2012;
+              gdpcountry = parseFloat(datarow[gdpcountryIndex]) + result[continent].GDP_2012;
               result[continent].POPULATION_2012 = population;
               result[continent].GDP_2012 = gdpcountry;
             }
